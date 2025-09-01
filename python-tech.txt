@@ -1,0 +1,22 @@
+Streamlit
+uv
+pydantic
+FastApi vs Flask/Django, etc.
+
+pygame
+numpy
+pandas
+pytest (builtin)
+
+PyTorch - Deep Learning
+TensorFlow - machine learning and artificial intelligence
+
+CI:
+  GitHub Actions
+  Jenkins
+
+VS Code users use Data Wrangler extension, or IDE's builtin Jupyter support
+
+venv switching to uv
+
+rust - binary modules
