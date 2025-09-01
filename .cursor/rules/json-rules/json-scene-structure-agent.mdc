@@ -1,0 +1,151 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# JSON Scene Structure Guidelines
+
+## Critical Rules
+
+- Scene File Organization
+  - All scene files must be stored in the `scenes/` directory
+  - Name files using kebab-case matching the scene's `abbrev` property
+  - Each scene file must be a valid JSON object with consistent indentation (4 spaces)
+  - All scene files must include the standard required properties
+
+- Required Properties for All Scenes
+  - `name`: Human-readable scene title (title case)
+  - `abbrev`: Unique scene identifier (kebab-case)
+  - `description`: Detailed narrative description of the scene
+  - `text_color`: Hex color code for text display (#RRGGBB format)
+  - `background_image`: Filename of the background image
+  - `audio_file`: Filename of the background audio
+  - `options`: Array of navigation options (at least one option required)
+
+- Item Structure
+  - When including the optional `items` array:
+    - Each item must have `name`, `description`, and `points` properties
+    - Item `name` must be lowercase and match its reference in other scenes
+    - Item `description` must provide clear information to the player
+    - Optional `useless_notification` provides feedback when items can't be used
+
+- Item Usage Structure
+  - When including the optional `item_uses` object:
+    - Keys must match item names defined elsewhere in the game
+    - Each item use must include a `success_message` describing the outcome
+    - Use `success_message_delay` (in milliseconds) to control timing
+    - Use `points` to indicate score changes (positive or negative)
+    - Use `consume` (boolean) to indicate if the item is removed after use
+    - Use `next_scene` to specify scene transitions
+    - Use `item_reuse_allowed` (boolean) to control repeated usage
+
+- Navigation Options
+  - Each option in the `options` array must include:
+    - `text`: Descriptive text for the player to read
+    - `abbrev`: The destination scene identifier (must match a valid scene file)
+  - Options must provide meaningful choices to the player
+  - Scene transitions must maintain game narrative coherence
+
+- JSON Data Types
+  - Strings must use double quotes, not single quotes
+  - Numbers must not be quoted
+  - Booleans must be lowercase (`true` or `false`)
+  - Arrays and objects must end with a trailing comma
+  - No comments allowed in JSON files
+
+- Content Guidelines
+  - Scene descriptions should be immersive and atmospheric
+  - Item descriptions should be concise but informative
+  - Success messages should reflect the game's tone and style
+  - Navigation options should suggest meaningful player choices
+
+## Examples
+
+<example>
+  # Good Scene Definition
+  ```json
+  {
+      "name": "Enchanted Forest",
+      "abbrev": "forest",
+      "description": "You approach a lush, vibrant forest. Sunlight filters through the canopy, casting dancing patterns on the forest floor. The air is alive with the sounds of birdsong and rustling leaves.",
+      "text_color": "#00ff00",
+      "background_image": "forest.png",
+      "audio_file": "forest.mp3",
+      "items": [
+          {
+              "name": "lantern",
+              "description": "A well-made lantern that can provide light in dark places.",
+              "points": 10,
+              "useless_notification": "You hold up the unlit lantern. It's not much use in the daylight of the forest, but would be handy in darker areas."
+          }
+      ],
+      "options": [
+          {
+              "text": "Follow the winding path deeper into the forest",
+              "abbrev": "deeper-forest"
+          },
+          {
+              "text": "Approach the cave entrance",
+              "abbrev": "cave"
+          }
+      ]
+  }
+  ```
+
+  # Good Item Use Definition
+  ```json
+  "item_uses": {
+      "sword": {
+          "success_message": "You swing the ancient sword with surprising precision, cutting through the vines blocking your path.",
+          "success_message_delay": 3000,
+          "item_reuse_allowed": true,
+          "points": 50,
+          "consume": false,
+          "next_scene": "clearing"
+      },
+      "lantern": {
+          "success_message": "The lantern illuminates the dark passage, revealing a hidden doorway.",
+          "success_message_delay": 2000,
+          "points": 25,
+          "consume": false
+      }
+  }
+  ```
+</example>
+
+<example type="invalid">
+  # Bad Scene Definition
+  ```json
+  {
+      "name": "dark cave",
+      "description": "It's dark.",
+      "options": ["Go back", "Go forward"]
+  }
+  ```
+
+  # Bad Item Use Definition
+  ```json
+  "item_uses": {
+      "SWORD": {
+          "success_message_delay": "3000",
+          "item_reuse_allowed": "true",
+          "points": "50",
+          "consume": "false",
+      }
+  }
+  ```
+
+  # Property Type Errors
+  ```json
+  {
+      "name": "Enchanted Forest",
+      "abbrev": "forest",
+      "description": "A forest with trees.",
+      "text_color": 00ff00,
+      "options": {
+          "text": "Go back",
+          "abbrev": "start"
+      }
+  }
+  ```
+</example>

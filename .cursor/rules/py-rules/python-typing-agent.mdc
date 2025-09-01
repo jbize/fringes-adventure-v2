@@ -1,0 +1,87 @@
+---
+description: This rule governs Python type hint usage across the project. It should be applied whenever: (1) Writing new Python code with type hints, (2) Refactoring existing Python code to add type hints, (3) Reviewing Python code for type safety. The rule ensures consistent and correct usage of Python's type system, proper imports, and type hint best practices.
+globs: 
+alwaysApply: false
+---
+
+# Python Typing Conventions
+
+## Critical Rules
+
+- Always import types from typing module that you use in type hints
+  - Import specific types rather than importing typing module as a whole
+  - Place typing imports with other standard library imports at the top
+  - Example: `from typing import List, Dict, Optional, Union`
+
+- Use capitalized types from typing module for type hints:
+  - `List` instead of `list`
+  - `Dict` instead of `dict`
+  - `Set` instead of `set`
+  - `Tuple` instead of `tuple`
+
+- Use built-in lowercase types for runtime operations:
+  - `list()` for creating lists
+  - `dict()` for creating dictionaries
+  - `set()` for creating sets
+  - `tuple()` for creating tuples
+  - `isinstance(obj, list)` for type checking
+
+- Use proper type hint syntax:
+  - Function return types: `def func() -> ReturnType:`
+  - Variable annotations: `variable: Type`
+  - Optional parameters: `param: Optional[Type] = None`
+  - Union types: `Union[Type1, Type2]`
+  - Type aliases: `TypeAlias = Union[Type1, Type2]`
+
+- Follow type hint best practices:
+  - Use `Any` sparingly and document why when used
+  - Use `Optional` instead of `Union[Type, None]`
+  - Use `TypeVar` for generic types
+  - Use `Protocol` for duck typing
+  - Document complex type hints with comments
+
+## Examples
+
+<example>
+# Good typing example
+from typing import Dict, List, Optional, Tuple, Union
+
+def process_data(items: List[str],
+                config: Optional[Dict[str, Any]] = None) -> Tuple[int, List[str]]:
+    """Process items according to config.
+    
+    Args:
+        items: List of strings to process
+        config: Optional configuration dictionary
+        
+    Returns:
+        Tuple of (count, processed_items)
+    """
+    processed: List[str] = []
+    for item in items:
+        # Processing logic
+        processed.append(item.upper())
+    return len(processed), processed
+
+# Runtime type usage
+my_list = list()
+isinstance(my_list, list)  # Type checking
+</example>
+
+<example type="invalid">
+# Bad typing example
+from typing import *  # Don't import *
+
+def process_data(items: list,  # Use List not list
+                config: dict = None  # Use Optional[Dict] 
+                ) -> tuple:  # Use Tuple with type params
+    processed = []  # Missing type annotation
+    return len(processed), processed
+
+# Missing imports for used types
+def other_func() -> Union[str, int]:  # Union not imported
+    pass
+
+# Mixing runtime and type hint usage
+my_list: List = List()  # Wrong! Use list() for creation
+</example> 

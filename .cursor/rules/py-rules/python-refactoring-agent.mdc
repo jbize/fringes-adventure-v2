@@ -1,0 +1,66 @@
+---
+description: This rule governs Python code refactoring across the project. It should be applied whenever: (1) Moving code between modules, (2) Restructuring packages, (3) Splitting large modules into smaller ones, (4) Reorganizing imports and dependencies. The rule ensures consistent refactoring practices and maintains proper package structure.
+globs: 
+alwaysApply: false
+---
+
+# Python Refactoring Guidelines
+
+## Critical Rules
+
+- When moving code to a new module:
+  1. Create dedicated .py files for implementations
+  2. Keep __init__.py files minimal (only package documentation and explicit exports)
+  3. Update all imports to reference the new module directly
+  4. Document the module's purpose in its docstring
+
+- When splitting modules:
+  1. Create descriptively named files for each logical group
+  2. Move implementation details out of __init__.py
+  3. Use __all__ to explicitly define public API
+  4. Update imports in all dependent modules
+
+- When refactoring packages:
+  1. Maintain a shallow hierarchy (max 3-4 levels)
+  2. Group related functionality in dedicated modules
+  3. Use explicit relative imports for internal package references
+  4. Add README.md files for complex package structures
+
+- Import Style:
+  1. Use explicit imports that show the source file
+  2. Avoid importing from package root when source is in a submodule
+  3. Group and order imports according to PEP 8
+  4. Use absolute imports for cross-package references
+
+## Examples
+
+<example>
+# Good refactoring - Moving app factory code
+# app/factory.py
+"""Flask application factory module."""
+def create_app():
+    # Implementation...
+    pass
+
+# app/__init__.py
+"""Flask application package."""
+from app.factory import create_app
+
+__all__ = ['create_app']
+
+# Good import updates
+from app.factory import create_app  # Explicit source
+from app.models.user import User    # Shows actual module
+</example>
+
+<example type="invalid">
+# Bad refactoring - Keeping implementation in __init__.py
+# app/__init__.py
+"""Flask application package."""
+def create_app():  # Should be in factory.py
+    pass
+
+# Bad imports after refactoring
+from app import create_app  # Hides actual source
+from app.models import User  # Unclear which file contains User
+</example> 

@@ -1,0 +1,145 @@
+---
+description: This rule governs Python development practices across the entire project. It should be considered whenever: (1) Planning new Python features or modules, (2) Modifying existing Python code, (3) Reviewing or fixing Python-related bugs, (4) Making architectural decisions that involve Python, (5) Creating new Python files or refactoring existing ones, (6) Developing web applications and APIs. The rule ensures consistent code style, modern Python patterns, and maintainable code structure. It's particularly crucial when dealing with data structures, API implementations, error handling, module organization, and web application security. Apply this rule when discussing, planning, or implementing any Python-related changes to maintain code quality and prevent common pitfalls.
+globs: 
+alwaysApply: false
+---
+
+# Python Best Practices
+
+## Critical Rules
+
+- Follow PEP 8 style guide for code formatting and naming conventions
+  - Use snake_case for functions and variables
+  - Use PascalCase for class names
+  - Use UPPERCASE for constants
+  - Maximum line length of 88 characters (Black formatter standard)
+
+- Code Organization and Structure
+  - Place imports at the top of the file in this order: standard library, third-party, local
+  - Use absolute imports over relative imports
+  - One class per file unless classes are closely related
+  - Group related functionality into modules
+  - Organize web applications using the Model-View-Controller (MVC) or similar pattern
+  - Keep route handlers thin, move business logic to services/utilities
+
+- Type Hints and Documentation
+  - Use type hints for function arguments and return values
+  - Include docstrings for modules, classes, and functions
+  - Follow Google-style docstring format
+  - Document complex algorithms and non-obvious code sections
+  - Document API endpoints with OpenAPI/Swagger specifications
+  - Include response schemas and error codes in API documentation
+
+- Error Handling
+  - Use specific exception types over bare except clauses
+  - Handle exceptions at the appropriate level
+  - Log errors with proper context
+  - Use context managers (with statements) for resource management
+  - Implement proper HTTP error handling with appropriate status codes
+  - Return consistent error response structures in APIs
+  - Log security-related errors separately
+
+- Performance and Best Practices
+  - Use list/dict/set comprehensions when appropriate
+  - Prefer generator expressions for large datasets
+  - Use f-strings for string formatting
+  - Implement proper logging instead of print statements
+  - Use pathlib over os.path for file operations
+  - Write unit tests for new functionality
+
+- Web Application Security
+  - Validate and sanitize all user inputs
+  - Use parameterized queries for database operations
+  - Implement proper authentication and authorization
+  - Store passwords using strong hashing algorithms (e.g., bcrypt)
+  - Set secure headers (CORS, CSP, HSTS)
+  - Use HTTPS for all production traffic
+  - Implement rate limiting for API endpoints
+  - Keep sensitive data out of logs and error messages
+
+- Database and ORM Usage
+  - Use database migrations for schema changes
+  - Implement proper connection pooling
+  - Use async database operations when appropriate
+  - Write optimized queries to avoid N+1 problems
+  - Implement proper database indexing
+  - Use transactions for data consistency
+
+## Examples
+
+<example>
+  # Good Python web application code example
+  from typing import List, Optional
+  from fastapi import FastAPI, HTTPException, Depends
+  from sqlalchemy.orm import Session
+  from pydantic import BaseModel
+  import logging
+
+  logger = logging.getLogger(__name__)
+
+  class UserCreate(BaseModel):
+      """User creation schema.
+      
+      Args:
+          username: Unique username
+          email: Valid email address
+          password: Strong password meeting requirements
+      """
+      username: str
+      email: str
+      password: str
+
+  class UserService:
+      def __init__(self, db: Session):
+          self.db = db
+
+      async def create_user(self, user: UserCreate) -> dict:
+          try:
+              # Validate input
+              if await self.get_user_by_email(user.email):
+                  raise HTTPException(status_code=400, detail="Email already registered")
+              
+              # Hash password and create user
+              hashed_password = hash_password(user.password)
+              db_user = User(
+                  username=user.username,
+                  email=user.email,
+                  hashed_password=hashed_password
+              )
+              
+              self.db.add(db_user)
+              await self.db.commit()
+              await self.db.refresh(db_user)
+              
+              return {"id": db_user.id, "username": db_user.username}
+          except HTTPException:
+              raise
+          except Exception as e:
+              logger.error(f"Failed to create user: {e}")
+              raise HTTPException(status_code=500, detail="Internal server error")
+</example>
+
+<example type="invalid">
+  # Bad Python web application code example
+  from flask import *
+  import sqlite3
+
+  app = Flask(__name__)
+
+  @app.route('/users', methods=['POST'])
+  def create_user():
+      # No input validation
+      data = request.json
+      
+      # SQL injection vulnerability
+      conn = sqlite3.connect('app.db')
+      cur = conn.cursor()
+      cur.execute(f"INSERT INTO users VALUES ('{data['username']}', '{data['password']}')")
+      
+      # No error handling
+      conn.commit()
+      conn.close()
+      
+      # Sensitive data in response
+      return {'message': 'User created', 'password': data['password']}
+</example> 

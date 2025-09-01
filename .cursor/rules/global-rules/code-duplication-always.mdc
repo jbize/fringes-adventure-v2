@@ -1,0 +1,102 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Code Duplication Prevention
+
+## Critical Rules
+
+- ALWAYS search for existing functionality before adding new code
+  - Use semantic search to find similar functionality
+  - Check all relevant directories and files
+  - Review existing utilities and services
+  - Look for similar variable and function names
+
+- When adding new functionality:
+  - First search the codebase for similar features
+  - Check utility folders and common service locations
+  - Review related modules and components
+  - Look for existing patterns that could be extended
+
+- When modifying existing features:
+  - Search for all usages of the feature
+  - Check for similar implementations
+  - Look for opportunities to consolidate code
+  - Consider making existing code more reusable
+
+- Follow the discovery process:
+  1. Use semantic search to find related code
+  2. Check utility and service directories
+  3. Review module-specific implementations
+  4. Look for similar patterns in the codebase
+  5. Only add new code if nothing exists
+
+## Examples
+
+<example>
+  # Good Practice - Checking for Existing Logging
+  ```python
+  # First, search for existing logging
+  # Found in main.py:
+  logger = logging.getLogger(__name__)
+  
+  # Reuse existing logger with additional context
+  @main_bp.before_request
+  def before_request():
+      if not request.path.startswith('/static/'):
+          nav_data = {
+              'user_id': current_user.id if not current_user.is_anonymous else None,
+              'username': current_user.username if not current_user.is_anonymous else 'Anonymous',
+              'path': request.path
+          }
+          logger.info(f"Navigation: {nav_data}")
+  ```
+
+  # Good Practice - Extending Existing Features
+  ```python
+  # Found existing user info function
+  def get_user_info():
+      return {
+          'id': current_user.id,
+          'username': current_user.username
+      }
+      
+  # Extend it instead of creating new function
+  def get_user_info(include_stats=False):
+      info = {
+          'id': current_user.id,
+          'username': current_user.username
+      }
+      if include_stats:
+          info['stats'] = get_user_stats()
+      return info
+  ```
+</example>
+
+<example type="invalid">
+  # Bad Practice - Creating Duplicate Logging
+  ```python
+  # Creating new logging without checking existing
+  def setup_logging():
+      new_logger = logging.getLogger('navigation')
+      new_logger.setLevel(logging.INFO)
+      handler = logging.FileHandler('logs/navigation.log')
+      new_logger.addHandler(handler)
+  
+  @app.before_request
+  def log_request():
+      new_logger.info(f"Request: {request.path}")
+  ```
+
+  # Bad Practice - Duplicating Functionality
+  ```python
+  # Creating new user info function without checking existing
+  def get_current_user_data():
+      return {
+          'user_id': current_user.id,
+          'user_name': current_user.username
+      }
+  ```
+</example> 

@@ -1,0 +1,56 @@
+---
+description: This rule governs Python package organization across the project. It should be applied whenever: (1) Creating new Python packages or modules, (2) Organizing or refactoring existing packages, (3) Making decisions about __init__.py usage, (4) Moving or restructuring Python code. The rule ensures consistent package structure and import patterns across the codebase.
+globs: 
+alwaysApply: false
+---
+
+# Python Package Structure Guidelines
+
+## Critical Rules
+
+- Use minimal `__init__.py` files that only mark directories as Python packages
+- Place actual code in dedicated `.py` files with clear, descriptive names
+- Name files according to their primary class or function (e.g., `models.py` for model definitions)
+- Use explicit imports that clearly show the source file (e.g., `from app.models.models import User`)
+- Keep package hierarchy shallow (max 3-4 levels deep)
+- Group related functionality in dedicated modules (e.g., `models`, `views`, `services`)
+- Document package structure in README.md files
+
+## Examples
+
+<example>
+  # Good package structure
+  app/
+  ├── models/
+  │   ├── __init__.py  # Empty or just package documentation
+  │   ├── models.py    # Contains actual model definitions
+  │   └── schemas.py   # Contains Pydantic/validation schemas
+  ├── services/
+  │   ├── __init__.py
+  │   └── user_service.py
+  
+  # Good __init__.py content
+  """
+  The models package contains database models and related schemas.
+  """
+
+  # Good import style
+  from app.models.models import User
+  from app.services.user_service import UserService
+</example>
+
+<example type="invalid">
+  # Bad package structure
+  app/
+  ├── models/
+  │   └── __init__.py  # Contains all model definitions
+  ├── services/
+  │   └── __init__.py  # Contains service implementations
+  
+  # Bad __init__.py usage
+  from .models import User  # Don't put implementation in __init__.py
+  from .services import create_user
+  
+  # Bad import style
+  from app.models import User  # Hides the actual source file
+</example> 

@@ -1,0 +1,171 @@
+---
+description: This rule governs CSS development practices across the entire project. It should be applied whenever: (1) Writing or modifying CSS styles, (2) Creating new components or layouts, (3) Implementing responsive design, (4) Optimizing CSS performance, (5) Managing CSS architecture and organization. The rule ensures consistent styling, maintainable CSS structure, and optimal performance.
+globs: 
+alwaysApply: false
+---
+
+# CSS Best Practices
+
+## Critical Rules
+
+- Architecture and Organization
+  - Follow BEM (Block Element Modifier) naming convention
+  - Organize CSS with a logical file structure
+  - Use CSS custom properties for theming
+  - Implement mobile-first responsive design
+  - Maintain consistent naming conventions
+
+- Selectors and Specificity
+  - Keep selector specificity low
+  - Avoid ID selectors for styling
+  - Use classes for reusable styles
+  - Limit nesting to 3 levels maximum
+  - Write specific, intention-revealing selectors
+
+- Performance and Optimization
+  - Minimize use of expensive properties (box-shadow, transform)
+  - Use efficient selectors
+  - Implement critical CSS for above-the-fold content
+  - Optimize media queries
+  - Minimize redundant rules
+
+- Maintainability
+  - Document complex CSS with comments
+  - Use consistent formatting (2 space indentation)
+  - Group related properties
+  - Maintain consistent property order
+  - Use shorthand properties appropriately
+
+- Responsive Design
+  - Use relative units (rem, em, %) over pixels
+  - Implement proper breakpoints
+  - Test across different devices
+  - Use flexbox and grid appropriately
+  - Ensure proper fallbacks
+
+## Examples
+
+<example>
+  /* Good - BEM naming and organization */
+  .inventory-card {
+    /* Block */
+    display: flex;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--card-bg);
+  }
+
+  .inventory-card__title {
+    /* Element */
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+
+  .inventory-card--highlighted {
+    /* Modifier */
+    border: 2px solid var(--highlight-color);
+    background-color: var(--highlight-bg);
+  }
+
+  /* Good - Custom properties and theming */
+  :root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --spacing-unit: 0.5rem;
+    --font-size-base: 1rem;
+  }
+
+  /* Good - Mobile-first responsive design */
+  .inventory-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-unit);
+    padding: var(--spacing-unit);
+  }
+
+  @media (min-width: 768px) {
+    .inventory-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .inventory-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Good - Performance optimization */
+  .button {
+    /* Group related properties */
+    /* Positioning */
+    position: relative;
+    z-index: 1;
+    
+    /* Box model */
+    display: inline-flex;
+    padding: 0.5rem 1rem;
+    margin: 0.25rem;
+    
+    /* Visual */
+    background-color: var(--primary-color);
+    border-radius: 0.25rem;
+    
+    /* Typography */
+    color: white;
+    font-weight: 500;
+    text-align: center;
+    
+    /* Animation */
+    transition: background-color 0.2s ease;
+  }
+</example>
+
+<example type="invalid">
+  /* Bad - Poor selector specificity and organization */
+  #header div.navigation ul li a.active {
+    color: red !important;
+  }
+
+  /* Bad - No responsive design */
+  .container {
+    width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Bad - Hard-coded values */
+  .card {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #333;
+  }
+
+  /* Bad - Excessive nesting */
+  .sidebar {
+    .navigation {
+      ul {
+        li {
+          a {
+            &:hover {
+              color: blue;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* Bad - Redundant rules */
+  .button-1 {
+    display: inline-block;
+    padding: 10px 20px;
+    background: blue;
+  }
+
+  .button-2 {
+    display: inline-block;
+    padding: 10px 20px;
+    background: red;
+  }
+</example> 

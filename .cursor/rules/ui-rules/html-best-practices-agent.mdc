@@ -1,0 +1,145 @@
+---
+description: This rule governs HTML development practices across the entire project. It should be applied whenever: (1) Creating new HTML templates or pages, (2) Modifying existing HTML structure, (3) Working with forms and user input, (4) Implementing accessibility features, (5) Optimizing page structure and performance. The rule ensures semantic markup, accessibility compliance, and maintainable HTML architecture.
+globs: 
+alwaysApply: false
+---
+
+# HTML Best Practices
+
+## Critical Rules
+
+- Document Structure
+  - Use proper HTML5 doctype and language declaration
+  - Include meta tags for charset and viewport
+  - Organize head section with proper meta tags and title
+  - Use semantic HTML elements (nav, main, article, etc.)
+  - Maintain logical document outline
+
+- Accessibility (a11y)
+  - Add ARIA labels and roles where appropriate
+  - Ensure proper heading hierarchy (h1-h6)
+  - Provide alt text for images
+  - Maintain keyboard navigation support
+  - Use semantic elements for better screen reader support
+
+- Forms and Input
+  - Label all form controls properly
+  - Group related form elements with fieldset
+  - Use appropriate input types (email, tel, number, etc.)
+  - Implement proper form validation attributes
+  - Add helpful error messages and aria-invalid states
+
+- Performance and SEO
+  - Minimize inline styles and scripts
+  - Use async/defer for script loading
+  - Implement proper meta tags for SEO
+  - Optimize image loading with srcset and sizes
+  - Follow proper link structure for SEO
+
+- Maintainability
+  - Use consistent indentation (2 spaces)
+  - Add comments for complex structures
+  - Keep markup clean and minimal
+  - Use meaningful class and ID names
+  - Maintain consistent naming conventions
+
+## Examples
+
+<example>
+  <!-- Good - Proper document structure with semantic elements -->
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management - Item Details</title>
+    <meta name="description" content="Manage your game inventory items">
+    <link rel="stylesheet" href="/css/main.css">
+  </head>
+  <body>
+    <header role="banner">
+      <nav role="navigation" aria-label="Main navigation">
+        <ul>
+          <li><a href="/" aria-current="page">Home</a></li>
+          <li><a href="/inventory">Inventory</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main role="main">
+      <h1>Item Details</h1>
+      
+      <!-- Good - Accessible form structure -->
+      <form action="/inventory/update" method="POST" novalidate>
+        <fieldset>
+          <legend>Item Information</legend>
+          
+          <div class="form-group">
+            <label for="item-name">Item Name</label>
+            <input 
+              type="text" 
+              id="item-name" 
+              name="itemName" 
+              required 
+              aria-required="true"
+              aria-describedby="name-help"
+            >
+            <small id="name-help">Enter the full item name</small>
+          </div>
+
+          <div class="form-group">
+            <label for="item-quantity">Quantity</label>
+            <input 
+              type="number" 
+              id="item-quantity" 
+              name="quantity" 
+              min="0" 
+              max="99"
+              required
+            >
+          </div>
+        </fieldset>
+
+        <button type="submit" aria-label="Save item details">Save</button>
+      </form>
+    </main>
+
+    <footer role="contentinfo">
+      <p>&copy; 2024 Game Inventory</p>
+    </footer>
+  </body>
+  </html>
+</example>
+
+<example type="invalid">
+  <!-- Bad - Poor structure and accessibility -->
+  <div class="header">
+    <!-- No semantic structure -->
+    <div class="nav">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+    </div>
+  </div>
+
+  <!-- Bad - Poor form structure -->
+  <div class="form">
+    <input type="text" placeholder="Enter name">
+    <!-- No labels or proper structure -->
+    <input type="submit" value="Submit">
+  </div>
+
+  <!-- Bad - Non-semantic structure -->
+  <div class="content">
+    <div class="title">Welcome</div>
+    <div class="text">Some content here</div>
+  </div>
+
+  <!-- Bad - Improper image usage -->
+  <img src="icon.png">
+  <!-- No alt text -->
+
+  <!-- Bad - Inline styles -->
+  <div style="margin-top: 20px; color: blue;">
+    Content with inline styles
+  </div>
+</example> 

@@ -1,0 +1,178 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Markdown Documentation Guidelines
+
+## Critical Rules
+
+- Document Organization
+  - `README.md` in project root must provide clear project overview
+  - Use dedicated `docs/` directory for detailed documentation
+  - Create specific documentation files for different aspects
+  - Maintain a clear hierarchy with main docs linking to subdocs
+  - Use meaningful filenames in kebab-case (e.g., `api-reference.md`)
+
+- Markdown Structure
+  - Use ATX-style headers (`#` for h1, `##` for h2, etc.)
+  - Maintain proper header hierarchy (never skip levels)
+  - Use unordered lists (`-`) for collections without sequence
+  - Use ordered lists (`1.`) for sequential steps
+  - Use code blocks with language specification (```python)
+  - Use tables for structured data
+  - Use horizontal rules (`---`) to separate major sections
+
+- Content Guidelines
+  - Start each document with a clear title and brief description
+  - Provide clear, concise explanations
+  - Include examples for complex concepts
+  - Document APIs with request/response examples
+  - Add diagrams where appropriate (Mermaid or images)
+  - Include links to related documentation
+  - Avoid unclear acronyms or unexplained jargon
+
+- Technical Documentation
+  - Document architecture decisions and rationale
+  - Explain data models and relationships
+  - Provide setup and installation instructions
+  - Include troubleshooting guides
+  - Document environment variables and configuration
+  - Explain development workflows
+  - Include contributor guidelines
+
+- README Structure
+  - Start with project name and concise description
+  - Include badges for build status, version, etc.
+  - Provide quick start instructions
+  - List key features
+  - Include basic usage examples
+  - Link to detailed documentation
+  - Add contribution guidelines
+  - Include license information
+
+## Examples
+
+<example>
+  # Good README Example
+  ```markdown
+  # Fringes Adventure
+  
+  A text-based adventure game built with Flask and SQLite.
+  
+  ## Features
+  
+  - Immersive text-based gameplay
+  - Item collection and usage system
+  - Dynamic scene transitions
+  - Player inventory management
+  - Score tracking
+  
+  ## Getting Started
+  
+  ### Prerequisites
+  
+  - Python 3.8+
+  - SQLite
+  
+  ### Installation
+  
+  1. Clone the repository
+     ```bash
+     git clone https://github.com/username/fringes_adventure.git
+     cd fringes_adventure
+     ```
+  
+  2. Install dependencies
+     ```bash
+     pip install -r requirements.txt
+     ```
+  
+  3. Run the application
+     ```bash
+     ./utility/run_dev.py
+     ```
+  
+  ## Documentation
+  
+  - [Development Guide](docs/development-guide.md)
+  - [API Reference](docs/api-reference.md)
+  - [Game Design](docs/game-design.md)
+  
+  ## License
+  
+  This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+  ```
+  
+  # Good Technical Documentation Example
+  ```markdown
+  # Database Schema
+  
+  ## Overview
+  
+  The game uses SQLite for data persistence with the following key models:
+  
+  - User: Stores player information
+  - Inventory: Manages player's collected items
+  - Scene: Defines game locations and possible actions
+  - Item: Defines collectible objects
+  
+  ## Entity Relationship Diagram
+  
+  ```mermaid
+  erDiagram
+      USER ||--o{ INVENTORY : has
+      INVENTORY ||--o{ ITEM : contains
+      SCENE ||--o{ ITEM : has
+      SCENE ||--o{ OPTION : contains
+      OPTION ||--|| SCENE : links_to
+  ```
+  
+  ## Models
+  
+  ### User
+  
+  | Field       | Type    | Description                            |
+  |-------------|---------|----------------------------------------|
+  | id          | Integer | Primary key                            |
+  | username    | String  | Unique username (login identifier)     |
+  | password    | String  | Hashed password                        |
+  | score       | Integer | Current player score                   |
+  | created_at  | DateTime| Account creation timestamp             |
+  | last_login  | DateTime| Last login timestamp                   |
+  
+  ### Inventory
+  
+  ...
+  ```
+</example>
+
+<example type="invalid">
+  # Bad README Example
+  ```markdown
+  # My Game
+  
+  this is a game i made
+  
+  to run it:
+  python app.py
+  
+  the game has items and you can collect them
+  if you find bugs email me
+  ```
+  
+  # Bad Technical Document Example
+  ```markdown
+  DATABASE INFO
+  
+  We use sqlite
+  
+  tables:
+  * users - stores users
+  * items - items in the game
+  * etc
+  
+  you can use SQL to query it like:
+  select * from users
+  ```
+</example>
